@@ -14,7 +14,7 @@ func main() {
 
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: newProvider,
-		ProviderAddr: "w564791/collections",
+		ProviderAddr: "w564791/collection",
 		Debug:        debug,
 	})
 }

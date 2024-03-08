@@ -16,7 +16,7 @@ func newProvider() *schema.Provider {
 		ConfigureFunc: nil,
 		ResourcesMap:  map[string]*schema.Resource{},
 		DataSourcesMap: map[string]*schema.Resource{
-			"collections_ip_ranges": dataIPRanges(),
+			"collection_ip_ranges": dataIPRanges(),
 		},
 	}
 }

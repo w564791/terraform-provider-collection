@@ -93,23 +93,27 @@ func flattenIPRanges(ranges []IPRange) (tfList map[string][]interface{}) {
 		return nil
 	}
 	tfList = make(map[string][]interface{})
+	
 	for _, btRaw := range ranges {
 		log.Printf("[DEBUG] IP Range Response Decoded: %#v", btRaw)
-		ip := btRaw.Network
-		if isIPv4(ip) {
-			v4List := tfList["ipv4"]
-			v4List = append(v4List, btRaw.CIDR)
-			tfList["ipv4"] = v4List
-		}
-		if isIPv6(ip) {
-			v6List := tfList["ipv6"]
-			v6List = append(v6List, btRaw.CIDR)
-			tfList["ipv6"] = v6List
-		}
-		cird_blocks := tfList["cird_blocks"]
-		cird_blocks = append(cird_blocks, btRaw.CIDR)
-		tfList["cird_blocks"] = cird_blocks
-
+		if anyElementInList([]string{"ingress"},btRaw.Directions) {
+			if stringInList([]string{"confluence","jira"},btRaw.Products) {
+				ip := btRaw.Network
+				if isIPv4(ip) {
+					v4List := tfList["ipv4"]
+					v4List = append(v4List, btRaw.CIDR)
+					tfList["ipv4"] = v4List
+				}
+				if isIPv6(ip) {
+					v6List := tfList["ipv6"]
+					v6List = append(v6List, btRaw.CIDR)
+					tfList["ipv6"] = v6List
+				}
+				cird_blocks := tfList["cird_blocks"]
+				cird_blocks = append(cird_blocks, btRaw.CIDR)
+				tfList["cird_blocks"] = cird_blocks
+			}
+		
 	}
 
 	return tfList
@@ -120,4 +124,14 @@ func isIPv4(ip string) bool {
 
 func isIPv6(ip string) bool {
 	return net.ParseIP(ip) != nil && net.ParseIP(ip).To4() == nil
+}
+func anyElementInList(list1, list2 []string) bool {
+	for _, item1 := range list1 {
+		for _, item2 := range list2 {
+			if item1 == item2 {
+				return true
+			}
+		}
+	}
+	return false
 }

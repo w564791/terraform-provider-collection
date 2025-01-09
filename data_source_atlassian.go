@@ -97,7 +97,7 @@ func flattenIPRanges(ranges []IPRange) (tfList map[string][]interface{}) {
 	for _, btRaw := range ranges {
 		log.Printf("[DEBUG] IP Range Response Decoded: %#v", btRaw)
 		if anyElementInList([]string{"ingress"},btRaw.Directions) {
-			if stringInList([]string{"confluence","jira"},btRaw.Products) {
+			if anyElementInList([]string{"confluence","jira"},btRaw.Products) {
 				ip := btRaw.Network
 				if isIPv4(ip) {
 					v4List := tfList["ipv4"]

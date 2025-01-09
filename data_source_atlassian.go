@@ -114,9 +114,10 @@ func flattenIPRanges(ranges []IPRange) (tfList map[string][]interface{}) {
 				tfList["cird_blocks"] = cird_blocks
 			}
 		
+		}
 	}
-
 	return tfList
+    
 }
 func isIPv4(ip string) bool {
 	return net.ParseIP(ip) != nil && net.ParseIP(ip).To4() != nil

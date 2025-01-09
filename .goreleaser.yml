@@ -1,7 +1,7 @@
 version: 2
 
 # 项目元信息
-project_name: terraform-provider-collection # 替换为你的项目名称
+project_name: my_project # 替换为你的项目名称
 dist: dist # 输出文件夹
 
 # 发布相关配置
@@ -25,7 +25,6 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - -s -w
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 # 归档配置
 archives:

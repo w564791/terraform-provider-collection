@@ -1,4 +1,4 @@
-version: '2'
+version: 2
 
 # 项目元信息
 project_name: terraform-provider-collection # 替换为你的项目名称

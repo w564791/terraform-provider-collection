@@ -1,55 +1,71 @@
-# Visit https://goreleaser.com for documentation on how to customize this
-# behavior.
-version: 2
-before:
-  hooks:
-    # this is just an example and not a requirement for provider building/publishing
-    - go mod tidy
-builds:
-- env:
-    # goreleaser does not work with CGO, it could also complicate
-    # usage by users in CI/CD systems like Terraform Cloud where
-    # they are unable to install libraries.
-    - CGO_ENABLED=0
-  mod_timestamp: '{{ .CommitTimestamp }}'
-  flags:
-    - -trimpath
-  ldflags:
-    - '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}'
-  goos:
-    - freebsd
-    - windows
-    - linux
-    - darwin
-  goarch:
-    - amd64
-    - '386'
-    - arm
-    - arm64
-  ignore:
-    - goos: darwin
-      goarch: '386'
-  binary: '{{ .ProjectName }}_v{{ .Version }}'
-archives:
-- format: zip
-  name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
-checksum:
-  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
-  algorithm: sha256
-signs:
-  - artifacts: checksum
-    args:
-      # if you are using this in a GitHub action or some other automated pipeline, you 
-      # need to pass the batch flag to indicate its not interactive.
-      - "--batch"
-      - "--local-user"
-      - "{{ .Env.GPG_FINGERPRINT }}" # set this environment variable for your signing key
-      - "--output"
-      - "${signature}"
-      - "--detach-sign"
-      - "${artifact}"
+version: '2'
+
+# 项目元信息
+project_name: terraform-provider-collection # 替换为你的项目名称
+dist: dist # 输出文件夹
+
+# 发布相关配置
 release:
-  # If you want to manually examine the release before its live, uncomment this line:
-  # draft: true
+  github:
+    owner: "w564791" # 替换为你的 GitHub 用户名
+    name: "w564791" # 替换为你的代码仓库名
+    token: "{{ .Env.GITHUB_TOKEN }}" # 使用环境变量存储 GitHub Token
+
+defaults:
+  builds:
+    - env:
+        - CGO_ENABLED=0 # 禁用 CGO
+      goos:
+        - linux
+        - darwin
+        - windows
+      goarch:
+        - amd64
+        - arm64
+  archives:
+    - replacements:
+        darwin: macOS
+        amd64: x86_64
+        arm64: arm64
+
+# 构建配置
+builds:
+  - id: default
+    main: . # 主程序路径
+    goos: 
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+    artifacts:
+      - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+# 归档配置
+archives:
+  - id: default
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - license*
+      - README.md
+
+# 快速检查工具
+check:
+  go_mod: true
+  go_fmt: true
+  go_vet: true
+  staticcheck: true
+
+# 快速快照发布配置
+snapshot:
+  name_template: "{{ .Tag }}"
+
+# 发布后动作
 changelog:
-  disable: false 
+  use: git
+  sort: asc

@@ -29,6 +29,7 @@ builds:
 # 归档配置
 archives:
   - id: default
+    format: zip
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     files:
       - license*

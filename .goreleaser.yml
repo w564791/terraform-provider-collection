@@ -1,14 +1,14 @@
 version: 2
 
 # 项目元信息
-project_name: my_project # 替换为你的项目名称
+project_name: terraform-provider-collection # 替换为你的项目名称
 dist: dist # 输出文件夹
 
 # 发布相关配置
 release:
   github:
     owner: "w564791" # 替换为你的 GitHub 用户名
-    name: "w564791" # 替换为你的代码仓库名
+    name: "terraform-provider-collection" # 替换为你的代码仓库名
 
 # 构建配置
 builds:

@@ -9,24 +9,6 @@ release:
   github:
     owner: "w564791" # 替换为你的 GitHub 用户名
     name: "w564791" # 替换为你的代码仓库名
-    token: "{{ .Env.GITHUB_TOKEN }}" # 使用环境变量存储 GitHub Token
-
-defaults:
-  builds:
-    - env:
-        - CGO_ENABLED=0 # 禁用 CGO
-      goos:
-        - linux
-        - darwin
-        - windows
-      goarch:
-        - amd64
-        - arm64
-  archives:
-    - replacements:
-        darwin: macOS
-        amd64: x86_64
-        arm64: arm64
 
 # 构建配置
 builds:
@@ -43,8 +25,7 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - -s -w
-    artifacts:
-      - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 # 归档配置
 archives:
@@ -53,13 +34,6 @@ archives:
     files:
       - license*
       - README.md
-
-# 快速检查工具
-check:
-  go_mod: true
-  go_fmt: true
-  go_vet: true
-  staticcheck: true
 
 # 快速快照发布配置
 snapshot:
